@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f2f2f2;
+        }
+
+
+        .topbar {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(0deg, #449bff, #8e2de2);
+        }
+
+
+        .login-box {
+            background: white;
+            width: 90%;
+            max-width: 350px;
+
+            margin: 60px auto 0 auto;
+
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0052b3;
+        }
+        .logo-box img {
+            width: 50px;
+            height: auto;
+            left: 20px;
+            position: absolute;
+            top: 10px;
+        }
+        h1 {
+            text-align: center;
+        }
+        h3, h4 {
+            text-align: center;
+        }
+         button {
+            background: linear-gradient(0deg, #449bff, #a845ff);
+            color:white;
+        }
+        button {
+    transition: transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(1.08);
+}
+
+        h4.description {
+            color: #515151;
+        }
+        h3.description {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .fork-icon {
+            text-align: center;
+            display: block;
+            margin: 20px auto;
+            width: 60px;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo-box">
+        <a href="login.html">
+    <img src="logo.png" class="top-logo">
+</a>
+    </div>
+‎ 
+</div>
+<h1>Welcome to Foodalicious!</h1>
+<img src="fork.png" class="fork-icon">
+
+
+<div class="login-box">
+    <h2 style="text-align:center; margin-top:0;">Login or Register</h2>
+
+    <input id="username" type="text" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+</div>
+
+<h3 class="description"> What is foodalicious?</h3> 
+<h4 class="description"> 
+    Foodalicious is your free, personal food tracker. 
+    <br> <br>
+    We offer personal pantry and fridge managment, so you can keep track of what you have and what you are missing.
+    <br> <br>
+    Just add your ingredients and recipes and let us do the rest! 
+    <br> <br>
+    We will generate a shopping list for you based on your recipes and stock, so you can spend less time planning and more time cooking.
+    <br> <br>
+    It is the perfect tool for anyone who loves food and wants to eat better, save money, and reduce waste.
+</h4>
+
+<img src="fork.png" class="fork-icon">
+
+
+<script>
+function login() {
+    const user = document.getElementById("username").value.trim();
+    const pass = document.getElementById("password").value.trim();
+
+    if (user === "" || pass === "") {
+        alert("Please enter both fields");
+        return;
+    }
+
+    // Redirect to stock page
+    window.location.href = "stock.html";
+}
+</script>
+
+</body>
+</html>
