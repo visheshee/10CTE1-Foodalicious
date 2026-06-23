@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping List</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding-bottom: 100px;
+            background: #f2f2f2;
+        }
+
+        .topbar {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            border-top: 2px solid #444;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+        }
+        .nav-item img {
+             filter: brightness(0) invert(1) !important;
+        }
+
+
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-item img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 5px;
+            filter: invert(1);
+        }
+        .ingredient {
+            background: white;
+            padding: 12px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+       .logo-box img {
+            width: 50px;
+            height: auto;
+            left: 20px;
+            position: absolute;
+            top: 10px;
+        }
+         .section-title {
+            display: inline-block;  
+            background: #dbdbdb;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding-left: 20px;
+            margin-left: 20px;
+        }
+         button {
+            background: linear-gradient(0deg, #449bff, #8e2de2);
+            color:white;
+        }
+        button {
+    transition: transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(1.08);
+}
+.fork-icon {
+            display: block;
+            margin: 20px auto;
+            width: 60px;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    
+<div class="topbar">
+    <div class="logo-box">
+    <a href="login.html">
+    <img src="logo.png" class="top-logo">
+    <img src="fork.png" class="fork-icon" style="position:absolute; top:-12px; right: -1795px; width:40px;">
+</a>
+</div>
+    Shopping List
+</div>
+
+
+<h2 class="section-title">Items you need to buy:</h2>
+
+<div id="shoppingList"></div>
+
+<script>
+let shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
+
+
+function deleteShoppingItem(index) {
+    shoppingList.splice(index, 1);
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
+    displayShoppingList();
+}
+
+function displayShoppingList() {
+    const list = document.getElementById("shoppingList");
+    list.innerHTML = "";
+
+    if (shoppingList.length === 0) {
+        list.innerHTML = "<p style='padding: 25px;'>Nothing to buy yet!</p>";
+        return;
+    }
+
+    shoppingList.forEach((item, index) => {
+        list.innerHTML += `
+            <div class="ingredient">
+                <div>
+                    <strong>${item.name}</strong><br>
+                    Out of stock (${item.unit})
+                </div>
+                <button class="delete-btn" onclick="deleteShoppingItem(${index})">X</button>
+            </div>
+        `;
+    });
+}
+
+displayShoppingList();
+</script>
+
+<div class="navbar">
+    <a class="nav-item" href="recipes.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/restaurant.png">
+        Recipes
+    </a>
+
+    <a class="nav-item" href="stock.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/save.png">
+        Stock
+    </a>
+
+    <a class="nav-item active" href="list.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/todo-list.png">
+        List
+    </a>
+</div>
+
+</body>
+</html>
