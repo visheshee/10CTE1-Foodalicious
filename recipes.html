@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipes</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding-bottom: 100px;
+            background: #f2f2f2;
+        }
+
+        .topbar {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            border-top: 2px solid #444;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+        }
+        .nav-item img {
+             filter: brightness(0) invert(1) !important;
+        }
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-item img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 5px;
+            filter: invert(1);
+        }
+
+        .recipe-card {
+            background: white;
+            padding: 15px;
+            margin: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .delete-btn, .edit-btn {
+            position: absolute;
+            top: 10px;
+            background: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .edit-btn {
+            right: 50px;
+            background: #4a90e2;
+        }
+
+        .delete-btn {
+            right: 10px;
+        }
+
+        .edit-box {
+            background: white;
+            padding: 15px;
+            margin: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo-box img {
+            width: 50px;
+            height: auto;
+            left: 20px;
+            position: absolute;
+            top: 10px;
+        }
+        .section-title {
+            display: inline-block;
+            background: #dbdbdb;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+        }
+        .recipe-links-section {
+    margin: 25px 20px;
+    text-align: left;
+}
+
+.recipe-links-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.recipe-link-btn {
+    display: inline-block;
+    background: #e6e6e6;
+    padding: 10px 15px;
+    margin: 6px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.recipe-link-btn:hover {
+    background: #d4d4d4;
+}
+     button {
+            background: linear-gradient(0deg, #449bff, #8e2de2);
+            color:white;
+        }
+
+    textarea {
+    padding-top: 6px;
+}
+
+button {
+    transition: transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(1.08);
+}
+
+ .fork-icon {
+            display: block;
+            margin: 20px auto;
+            width: 60px;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo-box">
+       <a href="login.html">
+    <img src="logo.png" class="top-logo">
+</a>
+ <img src="fork.png" class="fork-icon" style="position:absolute; top:-12px; right: -1795px; width:40px;">
+    </div>
+    Recipes
+</div>
+
+<div style="padding: 20px;">
+
+    <div class="section-title">Create Recipe</div>
+    <br>
+
+    <input id="recipeName" type="text" placeholder="Recipe Name" style="width: 50%; padding: 8px; margin-bottom: 10px;">
+<br>
+    <textarea id="recipeDescription" placeholder="Recipe instructions or description"
+style="width: 50%; height: 60px; padding: 6px; margin-bottom: 10px; resize: both;"></textarea>
+
+<br>
+    <div class="section-title">Add Ingredients</div>
+<br>
+    <select id="ingredientSelect" style="width: 25%; padding: 8px; margin-bottom: 10px;"></select>
+    <input id="ingredientAmount" type="number" placeholder="Amount needed" style="width: 25%; padding: 8px; margin-bottom: 10px;">
+<br>
+    <button onclick="addIngredientToRecipe()" style="padding: 10px 20px;">Add Ingredient</button>
+<br>
+   <div class="section-title">Ingredients for this recipe:</div>
+    <div id="recipeIngredients"></div>
+
+    <button onclick="saveRecipe()" style="padding: 10px 20px; margin-top: 10px;">Save Recipe</button>
+
+    <div id="editBox" class="edit-box" style="display:none;">
+        <div class="section-title">Edit Recipe</div>
+        <br>
+
+        <input id="editName" type="text" placeholder="Recipe name" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <textarea id="editDescription" placeholder="Recipe description" style="width: 100%; padding: 8px; margin-bottom: 10px;"></textarea>
+
+        <div class="section-title">Edit Ingredients</div>
+        <br>
+
+        <select id="editIngredientSelect" style="width: 100%; padding: 8px; margin-bottom: 10px;"></select>
+        <input id="editIngredientAmount" type="number" placeholder="Amount needed" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+        <button onclick="addIngredientToEdit()" style="padding: 10px 20px;">Add Ingredient</button>
+
+        <div class="section-title">Ingredients:</div>
+        <div id="editIngredientList"></div>
+
+        <button onclick="saveEditedRecipe()" style="padding: 10px 20px; margin-top: 10px;">Save Changes</button>
+        <button onclick="cancelEdit()" style="padding: 10px 20px; margin-top: 10px; background:#aaa;">Cancel</button>
+    </div>
+    <br>
+    <hr>
+    <div class="section-title">Your Recipes</div>
+    <div id="recipeList"></div>
+
+</div>
+
+<script>
+let stock = JSON.parse(localStorage.getItem("stock")) || [];
+let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+let currentIngredients = [];
+let editIngredients = [];
+let editingIndex = -1;
+
+function loadStockIntoDropdown() {
+    const dropdown1 = document.getElementById("ingredientSelect");
+    const dropdown2 = document.getElementById("editIngredientSelect");
+
+    dropdown1.innerHTML = "";
+    dropdown2.innerHTML = "";
+
+    stock.forEach((item, index) => {
+        const option = `<option value="${index}">${item.name} (${item.unit})</option>`;
+        dropdown1.innerHTML += option;
+        dropdown2.innerHTML += option;
+    });
+}
+
+function addIngredientToRecipe() {
+    const index = document.getElementById("ingredientSelect").value;
+    const amount = document.getElementById("ingredientAmount").value;
+
+    if (!amount) return alert("Enter an amount");
+
+    currentIngredients.push({
+        name: stock[index].name,
+        unit: stock[index].unit,
+        amount: Number(amount),
+        stockIndex: index
+    });
+
+    displayCurrentIngredients();
+    document.getElementById("ingredientAmount").value = "";
+}
+
+function displayCurrentIngredients() {
+    const container = document.getElementById("recipeIngredients");
+    container.innerHTML = "";
+
+    currentIngredients.forEach(item => {
+        container.innerHTML += `
+            <div class="recipe-card">
+                ${item.name} — ${item.amount} ${item.unit}
+            </div>
+        `;
+    });
+}
+
+function saveRecipe() {
+    const name = document.getElementById("recipeName").value;
+    const description = document.getElementById("recipeDescription").value;
+
+    if (!name || currentIngredients.length === 0)
+        return alert("Please enter a name and at least one ingredient");
+
+    recipes.push({ name, description, ingredients: currentIngredients });
+
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+
+    currentIngredients = [];
+    document.getElementById("recipeName").value = "";
+    document.getElementById("recipeDescription").value = "";
+    displayCurrentIngredients();
+    displayRecipes();
+}
+
+function deleteRecipe(index) {
+    recipes.splice(index, 1);
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+    displayRecipes();
+}
+
+function cookRecipe(index) {
+    const recipe = recipes[index];
+
+    recipe.ingredients.forEach(item => {
+        const stockItem = stock[item.stockIndex];
+        if (stockItem) {
+            stockItem.amount -= item.amount;
+            if (stockItem.amount < 0) stockItem.amount = 0;
+        }
+    });
+
+    localStorage.setItem("stock", JSON.stringify(stock));
+    alert("Ingredients deducted from stock");
+}
+
+function editRecipe(index) {
+    editingIndex = index;
+    const recipe = recipes[index];
+
+    document.getElementById("editName").value = recipe.name;
+    document.getElementById("editDescription").value = recipe.description;
+
+    editIngredients = JSON.parse(JSON.stringify(recipe.ingredients));
+
+    displayEditIngredients();
+
+    document.getElementById("editBox").style.display = "block";
+}
+
+function addIngredientToEdit() {
+    const index = document.getElementById("editIngredientSelect").value;
+    const amount = document.getElementById("editIngredientAmount").value;
+
+    if (!amount) return alert("Enter an amount");
+
+    editIngredients.push({
+        name: stock[index].name,
+        unit: stock[index].unit,
+        amount: Number(amount),
+        stockIndex: index
+    });
+
+    displayEditIngredients();
+    document.getElementById("editIngredientAmount").value = "";
+}
+
+function displayEditIngredients() {
+    const container = document.getElementById("editIngredientList");
+    container.innerHTML = "";
+
+    editIngredients.forEach((item, i) => {
+        container.innerHTML += `
+            <div class="recipe-card">
+                ${item.name} — ${item.amount} ${item.unit}
+                <button class="delete-btn" onclick="removeEditIngredient(${i})">X</button>
+            </div>
+        `;
+    });
+}
+
+function removeEditIngredient(i) {
+    editIngredients.splice(i, 1);
+    displayEditIngredients();
+}
+
+function saveEditedRecipe() {
+    recipes[editingIndex] = {
+        name: document.getElementById("editName").value,
+        description: document.getElementById("editDescription").value,
+        ingredients: editIngredients
+    };
+
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+
+    document.getElementById("editBox").style.display = "none";
+    displayRecipes();
+}
+
+function cancelEdit() {
+    document.getElementById("editBox").style.display = "none";
+}
+
+function displayRecipes() {
+    const list = document.getElementById("recipeList");
+    list.innerHTML = "";
+
+    recipes.forEach((recipe, index) => {
+        let ingredientHTML = "";
+        recipe.ingredients.forEach(ing => {
+            ingredientHTML += `
+                <div style="margin-left: 10px;">
+                    • ${ing.name} — ${ing.amount} ${ing.unit}
+                </div>
+            `;
+        });
+
+        list.innerHTML += `
+            <div class="recipe-card">
+                <button class="edit-btn" onclick="editRecipe(${index})">Edit</button>
+                <button class="delete-btn" onclick="deleteRecipe(${index})">X</button>
+
+                <strong>${recipe.name}</strong><br>
+                <em>${recipe.description}</em><br><br>
+
+                <strong>Ingredients:</strong><br>
+                ${ingredientHTML}
+
+                <br>
+                <button onclick="cookRecipe(${index})">Cook</button>
+            </div>
+        `;
+    });
+}
+
+loadStockIntoDropdown();
+displayRecipes();
+</script>
+
+<hr style="margin: 40px 20px;">
+
+<div class="recipe-links-section">
+    <div class="recipe-links-title">Looking for recipes?</div>
+
+    <a href="https://www.allrecipes.com" target="_blank" class="recipe-link-btn">
+        AllRecipes
+    </a>
+
+    <a href="https://www.food52.com/recipes" target="_blank" class="recipe-link-btn">
+        Food52
+    </a>
+</div>
+
+
+<div class="navbar">
+    <a class="nav-item active" href="recipes.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/restaurant.png">
+        Recipes
+    </a>
+
+    <a class="nav-item" href="stock.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/save.png">
+        Stock
+    </a>
+
+    <a class="nav-item" href="list.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/todo-list.png">
+        List
+    </a>
+</div>
+
+</body>
+</html>
+        
