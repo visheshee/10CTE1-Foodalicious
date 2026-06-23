@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding-bottom: 100px;
+            background: #f2f2f2;
+        }
+
+        .topbar {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            border-top: 2px solid #444;
+            background: linear-gradient(0deg, #449bff, #a845ff);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+        }
+        .nav-item img {
+             filter: brightness(0) invert(1) !important;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-item img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 5px;
+            filter: invert(1);
+        }
+
+        .ingredient {
+            background: white;
+            padding: 12px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn, .edit-btn {
+            background: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .edit-btn {
+            background: #4a90e2;
+        }
+
+        .edit-box {
+            background: white;
+            padding: 15px;
+            margin: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo-box img {
+            width: 50px;
+            height: auto;
+            left: 20px;
+            position: absolute;
+            top: 10px;
+        }
+
+        .section-title {
+    display: inline-block;   
+    background: #dbdbdb;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+}
+        button {
+            background: linear-gradient(0deg, #449bff, #8e2de2);
+            color:white;
+        }
+        button {
+    transition: transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(1.08);
+}
+
+.fork-icon {
+            display: block;
+            margin: 20px auto;
+            width: 60px;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo-box">
+        <a href="login.html">
+    <img src="logo.png" class="top-logo">
+    <img src="fork.png" class="fork-icon" style="position:absolute; top:-12px; right: -1795px; width:40px;">
+</a>
+    </div>
+    Stock
+</div>
+
+<div style="padding: 20px;">
+
+    <div class="section-title">Add Ingredient</div>
+<br>
+    <input id="ingredientName" type="text" placeholder="Ingredient name" style="width: 50%; padding: 8px; margin-bottom: 10px;">
+    <br>
+    <input id="ingredientAmount" type="number" placeholder="Amount" style="width: 25%; padding: 8px; margin-bottom: 10px;">
+
+    <select id="ingredientUnit" style="width: 24.70%; padding: 8px; margin-bottom: 10px;">
+        <option value="g">grams (g)</option>
+        <option value="kg">kilograms (kg)</option>
+        <option value="mL">millilitres (mL)</option>
+        <option value="L">litres (L)</option>
+    </select>
+<br>
+    <button class="buton" onclick="addIngredient()" style="padding: 10px 20px;">Add Ingredient</button>
+
+
+    <div id="editBox" class="edit-box" style="display:none;">
+        <h2>Edit Ingredient</h2>
+
+        <input id="editName" type="text" placeholder="Ingredient name" style="width: 50%; padding: 8px; margin-bottom: 10px;">
+        <br>
+        <input id="editAmount" type="number" placeholder="Amount" style="width: 25%; padding: 8px; margin-bottom: 10px;">
+
+        <select id="editUnit" style="width: 25%; padding: 8px; margin-bottom: 10px;">
+            <option value="g">grams (g)</option>
+            <option value="kg">kilograms (kg)</option>
+            <option value="mL">millilitres (mL)</option>
+            <option value="L">litres (L)</option>
+        </select>
+<br>
+        <button onclick="saveEdit()" style="padding: 10px 20px;">Save Changes</button>
+        <button onclick="cancelEdit()" style="padding: 10px 20px; background:#aaa;">Cancel</button>
+    </div>
+    <br>
+    <hr>
+    <div class="section-title">Your Stock</div>
+    <div id="ingredientList"></div>
+
+</div>
+
+<script>
+let stock = JSON.parse(localStorage.getItem("stock")) || [];
+let shoppingList = JSON.parse(localStorage.getItem("shoppingList")) || [];
+
+let editingIndex = -1;
+
+function addIngredient() {
+    const name = document.getElementById("ingredientName").value;
+    const amount = Number(document.getElementById("ingredientAmount").value);
+    const unit = document.getElementById("ingredientUnit").value;
+
+    if (!name || !amount) return alert("Please fill in all fields");
+
+    stock.push({ name, amount, unit });
+    localStorage.setItem("stock", JSON.stringify(stock));
+
+    displayStock();
+
+    document.getElementById("ingredientName").value = "";
+    document.getElementById("ingredientAmount").value = "";
+}
+
+function deleteIngredient(index) {
+    stock.splice(index, 1);
+    localStorage.setItem("stock", JSON.stringify(stock));
+    displayStock();
+}
+
+function editIngredient(index) {
+    editingIndex = index;
+    const item = stock[index];
+
+    document.getElementById("editName").value = item.name;
+    document.getElementById("editAmount").value = item.amount;
+    document.getElementById("editUnit").value = item.unit;
+
+    document.getElementById("editBox").style.display = "block";
+}
+
+function saveEdit() {
+    const name = document.getElementById("editName").value;
+    const amount = Number(document.getElementById("editAmount").value);
+    const unit = document.getElementById("editUnit").value;
+
+    if (!name || !amount) return alert("Fill all fields");
+
+    stock[editingIndex] = { name, amount, unit };
+    localStorage.setItem("stock", JSON.stringify(stock));
+
+    document.getElementById("editBox").style.display = "none";
+    displayStock();
+}
+
+function cancelEdit() {
+    document.getElementById("editBox").style.display = "none";
+}
+
+function displayStock() {
+    const list = document.getElementById("ingredientList");
+    list.innerHTML = "";
+
+    stock = stock.filter(item => {
+        if (item.amount <= 0) {
+            shoppingList.push({ name: item.name, unit: item.unit });
+            localStorage.setItem("shoppingList", JSON.stringify(shoppingList));
+            return false;
+        }
+        return true;
+    });
+
+    localStorage.setItem("stock", JSON.stringify(stock));
+
+    stock.forEach((item, index) => {
+        list.innerHTML += `
+            <div class="ingredient">
+                <div>
+                    <strong>${item.name}</strong><br>
+                    ${item.amount} ${item.unit}
+                </div>
+
+                <div>
+                    <button class="edit-btn" onclick="editIngredient(${index})">Edit</button>
+                    <button class="delete-btn" onclick="deleteIngredient(${index})">X</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+displayStock();
+</script>
+
+<div class="navbar">
+    <a class="nav-item" href="recipes.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/restaurant.png">
+        Recipes
+    </a>
+
+    <a class="nav-item active" href="stock.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/save.png">
+        Stock
+    </a>
+
+    <a class="nav-item" href="list.html">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/todo-list.png">
+        List
+    </a>
+</div>
+
+</body>
+</html>
+
