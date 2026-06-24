@@ -7,7 +7,7 @@
             font-family: Arial;
             margin: 0;
             padding-bottom: 100px;
-            background: #f2f2f2;
+             background-image: url("bg.png")
         }
 
         .topbar {
@@ -116,6 +116,19 @@ button:active {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
         }
+        .spin-3d {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    animation: spin3d 2s linear infinite;
+
+    transform-style: preserve-3d;
+}
+
+@keyframes spin3d {
+    from { transform: rotateY(360deg); }
+    to   { transform: rotateY(0deg); }
+}
     </style>
 </head>
 <body>
@@ -124,15 +137,18 @@ button:active {
     <div class="logo-box">
     <a href="index.html">
     <img src="logo.png" class="top-logo">
-    <img src="fork.png" class="fork-icon" style="position:absolute; top:-12px; right: -1795px; width:40px;">
+    
 </a>
 </div>
     Shopping List
 </div>
-
-
+<div style="position: relative; width: 100%; height: 0;">
+    <img src="fork.png" class="spin-3d" style="display:block; margin-left:auto; margin-right:5px; position:absolute; top:20px; right: 5px;">
+</div>
+<br>
 <h2 class="section-title">Items you need to buy:</h2>
-
+<br><br><br>
+<hr><br>
 <div id="shoppingList"></div>
 
 <script>
